@@ -1,0 +1,88 @@
+package com.example.robokalam
+
+import android.app.Application
+import android.content.Context
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.robokalam.Screens.AboutScreen
+import com.example.robokalam.Screens.DashboardScreen
+import com.example.robokalam.Screens.LoginScreen
+import com.example.robokalam.Screens.PortfolioScreen
+import com.example.robokalam.Screens.QuoteScreen
+import com.example.robokalam.ui.theme.RobokalamTheme
+import kotlinx.coroutines.delay
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.robokalam.Screens.PortfolioViewModel
+import com.example.robokalam.Screens.PortfolioViewModelFactory
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            RobokalamTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val navController = rememberNavController()
+                    val context = LocalContext.current
+                    val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                    val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
+
+                    NavHost(navController, startDestination = if (isLoggedIn) "dashboard" else "splash") {
+                        composable("splash") { SplashScreen(navController) }
+                        composable("login") { LoginScreen(navController) }
+                        composable("dashboard") { DashboardScreen(navController) }
+                        composable("portfolio") {
+                            val context = LocalContext.current.applicationContext as Application
+                            val portfolioViewModel: PortfolioViewModel = viewModel(
+                                factory = PortfolioViewModelFactory(context)
+                            )
+                            PortfolioScreen(viewModel = portfolioViewModel)
+                        }
+
+                        composable("quote") { QuoteScreen() }
+                        composable("about") { AboutScreen(navController) }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// SplashScreen.kt
+@Composable
+fun SplashScreen(navController: NavHostController) {
+    LaunchedEffect(true) {
+        delay(2000)
+        navController.navigate("login") {
+            popUpTo("splash") { inclusive = true }
+        }
+    }
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(painter = painterResource(id = R.drawable.robokalam_logo), contentDescription = null)
+            Text("Robokalam", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        }
+    }
+}
