@@ -1,21 +1,13 @@
 package com.example.robokalam.Screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +41,7 @@ fun AboutScreen(navController: NavHostController) {
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Robokalam Logo
                     Image(
                         painter = painterResource(R.drawable.robokalam_logo),
                         contentDescription = "Robokalam Logo",
@@ -59,22 +52,27 @@ fun AboutScreen(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Tagline
                     Text(
                         text = "Empowering Young Minds Through Technology",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF6200EE)
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    // Description
                     Text(
                         text = "Robokalam is a 21st-century EdTech platform offering hands-on learning in robotics, AI, IoT, and coding through engaging internships, workshops, and DIY kits. Our mission is to make learning interactive and fun, preparing students for the future of work.",
                         fontSize = 16.sp,
-                        lineHeight = 22.sp
+                        lineHeight = 22.sp,
+                        color = Color.Gray
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Key Offerings Card
                     Card(
                         shape = RoundedCornerShape(8.dp),
                         elevation = 4.dp,
@@ -84,7 +82,8 @@ fun AboutScreen(navController: NavHostController) {
                             Text(
                                 text = "Key Offerings:",
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp
+                                fontSize = 18.sp,
+                                color = Color(0xFF6200EE)
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text("• Gamified Learning Platform")
@@ -98,18 +97,27 @@ fun AboutScreen(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Logout Button
                     Button(
-                        onClick = { navController.navigate("login") },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF6200EE))
+                        onClick = {
+                            navController.navigate("login") {
+                                popUpTo("login") { inclusive = true }  // Clear back stack up to the login screen
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF6200EE)),
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
+                        shape = RoundedCornerShape(12.dp)
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.logout),
+                        Icon(
+                            imageVector = Icons.Filled.ExitToApp,
                             contentDescription = "Logout",
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
+                            tint = Color.White
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Logout", color = Color.White)
+                        Text("Logout", color = Color.White, fontWeight = FontWeight.Bold)
                     }
+
                 }
             }
         )
